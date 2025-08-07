@@ -1,25 +1,51 @@
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const NavBar = (props) => {
+const SignIn = (props) => {
+  const navigate = useNavigate()
 
+  const initialState = {
+    username: '',
+    password: '',
+  }
 
+  const [formData, setFormData] = useState(initialState)
+
+  useEffect(() => {
+    if (props.user) {
+      navigate('/')
+    }
+  }, [props.user])
+
+  const handleChange = (evt) => {
+    setFormData({...formData, [evt.target.name]: evt.target.value})
+  }
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault()
+    props.handleSignIn(formData)
+    navigate('/')
+  }
 
   return (
-    <nav>
+     <nav>
+      <ul>
+        <li><Link to="/"> Home </Link></li>
+        <li><Link to="/hoots"> Hoots </Link></li>
       {props.user ? (
-        <ul>
+        <>
           <li>Welcome {props.user.username}</li>
-          <li><Link to="/"> Home </Link></li>
           <li><Link to='/' onClick={props.handleSignOut}>Sign Out</Link></li>
-        </ul>
+        </>
         ) : (
-          <ul>
+          <>
             <li><Link to="/sign-up">Sign Up</Link></li>
             <li><Link to="/sign-in">Sign In</Link></li>
-          </ul>
+          </>
           ) }
+        </ul>
     </nav>
   )
 }
 
-export default NavBar 
+export default SignIn
